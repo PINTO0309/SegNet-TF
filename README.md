@@ -1,6 +1,6 @@
 # SegNet-Tensorflow implementation
 I made minor bugfixes for toimcio/SegNet-tensorflow.  
-The copyright of the product belongs to tocio.
+The copyright of the product belongs to toimcio.  
 https://github.com/toimcio/SegNet-tensorflow
 
 # Usage
