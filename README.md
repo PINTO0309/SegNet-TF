@@ -1,5 +1,5 @@
 # SegNet-Tensorflow implementation
-I made minor bugfixes for toimcio/SegNet-tensorflow.
+I made minor bugfixes for toimcio/SegNet-tensorflow.  
 The copyright of the product belongs to tocio.
 https://github.com/toimcio/SegNet-tensorflow
 
@@ -35,12 +35,12 @@ $ python3
 ```
 
 # Environment
-Requirement: Tensorflow-GPU 1.11.0
-Ubuntu: 16.04
-python: 3.5.2
-CUDA: 9.0
-cuDNN: 7
-GPU:Geforce GTX 1070
+Requirement: Tensorflow-GPU 1.11.0  
+Ubuntu: 16.04  
+python: 3.5.2  
+CUDA: 9.0  
+cuDNN: 7  
+GPU:Geforce GTX 1070  
 
 
 
