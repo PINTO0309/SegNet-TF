@@ -1,0 +1,7 @@
+ckpt/checkpoint
+ckpt/deploy*
+vgg16.npy
+SegNet/CamVid
+SegNet/sun3d_dataset
+tensorboard_logs/events*
+__pycache__
