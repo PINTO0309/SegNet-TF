@@ -57,9 +57,23 @@ CUDA: 9.0
 cuDNN: 7  
 GPU:Geforce GTX 1070  
 
-
-
-
+# Material
+## 1. Check Point File (.ckpt)
+$ curl -sc /tmp/cookie "https://drive.google.com/uc?export=download&id=1vFa6h4SkdJ6irwUwnbSJUFf3tkH4Ina5" > /dev/null
+$ CODE="$(awk '/_warning_/ {print $NF}' /tmp/cookie)"
+$ curl -Lb /tmp/cookie "https://drive.google.com/uc?export=download&confirm=${CODE}&id=1vFa6h4SkdJ6irwUwnbSJUFf3tkH4Ina5" -o deploy.tar.gz
+## 2. Slimmed Check Point File (.ckpt)
+$ curl -sc /tmp/cookie "https://drive.google.com/uc?export=download&id=1WY98-AXRbo83r3z_5LktLtdiRV0w9IA1" > /dev/null
+$ CODE="$(awk '/_warning_/ {print $NF}' /tmp/cookie)"
+$ curl -Lb /tmp/cookie "https://drive.google.com/uc?export=download&confirm=${CODE}&id=1WY98-AXRbo83r3z_5LktLtdiRV0w9IA1" -o deployfinal.tar.gz
+## 3. Protocol Buffer Text (.pbtxt)
+$ curl -sc /tmp/cookie "https://drive.google.com/uc?export=download&id=1-eaByvjJAUvIdaS2Y3--KatCY0O3v24q" > /dev/null
+$ CODE="$(awk '/_warning_/ {print $NF}' /tmp/cookie)"
+$ curl -Lb /tmp/cookie "https://drive.google.com/uc?export=download&confirm=${CODE}&id=1-eaByvjJAUvIdaS2Y3--KatCY0O3v24q" -o deployfinal.pbtxt
+## 4. Frozen graph (.pb)
+$ curl -sc /tmp/cookie "https://drive.google.com/uc?export=download&id=1N1xx7wo7qmmM3CVnqmYQU5dp-aFWGh6t" > /dev/null
+$ CODE="$(awk '/_warning_/ {print $NF}' /tmp/cookie)"
+$ curl -Lb /tmp/cookie "https://drive.google.com/uc?export=download&confirm=${CODE}&id=1N1xx7wo7qmmM3CVnqmYQU5dp-aFWGh6t" -o deployfinal.pb
 
 
 
