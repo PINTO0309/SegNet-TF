@@ -4,8 +4,7 @@ import os
 import tensorflow as tf
 import numpy as np
 import random
-from layers_object import conv_layer, up_sampling, max_pool, initialization, \
-    variable_with_weight_decay
+from layers_object import conv_layer, up_sampling, max_pool, initialization, variable_with_weight_decay
 from evaluation_object import cal_loss, normal_loss, per_class_acc, get_hist, print_hist_summary, train_op, MAX_VOTE, var_calculate
 from inputs_object import get_filename_list, dataset_inputs, get_all_test_data
 from drawings_object import draw_plots_bayes, draw_plots_bayes_external
@@ -66,56 +65,40 @@ class SegNet:
             # Reference page:https://www.tensorflow.org/api_docs/python/tf/nn/local_response_normalization
             self.norm1 = tf.nn.lrn(self.inputs_pl, depth_radius=5, bias=1.0, alpha=0.0001, beta=0.75, name='norm1')
             # first box of convolution layer,each part we do convolution two times, so we have conv1_1, and conv1_2
-            self.conv1_1 = conv_layer(self.norm1, "conv1_1", [3, 3, 3, 64], self.is_training_pl, self.use_vgg,
-                                      self.vgg_param_dict)
-            self.conv1_2 = conv_layer(self.conv1_1, "conv1_2", [3, 3, 64, 64], self.is_training_pl, self.use_vgg,
-                                      self.vgg_param_dict)
+            self.conv1_1 = conv_layer(self.norm1, "conv1_1", [3, 3, 3, 64], self.is_training_pl, self.use_vgg, self.vgg_param_dict)
+            self.conv1_2 = conv_layer(self.conv1_1, "conv1_2", [3, 3, 64, 64], self.is_training_pl, self.use_vgg, self.vgg_param_dict)
             self.pool1, self.pool1_index, self.shape_1 = max_pool(self.conv1_2, 'pool1')
 
             # Second box of convolution layer(4)
-            self.conv2_1 = conv_layer(self.pool1, "conv2_1", [3, 3, 64, 128], self.is_training_pl, self.use_vgg,
-                                      self.vgg_param_dict)
-            self.conv2_2 = conv_layer(self.conv2_1, "conv2_2", [3, 3, 128, 128], self.is_training_pl, self.use_vgg,
-                                      self.vgg_param_dict)
+            self.conv2_1 = conv_layer(self.pool1, "conv2_1", [3, 3, 64, 128], self.is_training_pl, self.use_vgg, self.vgg_param_dict)
+            self.conv2_2 = conv_layer(self.conv2_1, "conv2_2", [3, 3, 128, 128], self.is_training_pl, self.use_vgg, self.vgg_param_dict)
             self.pool2, self.pool2_index, self.shape_2 = max_pool(self.conv2_2, 'pool2')
 
             # Third box of convolution layer(7)
-            self.conv3_1 = conv_layer(self.pool2, "conv3_1", [3, 3, 128, 256], self.is_training_pl, self.use_vgg,
-                                      self.vgg_param_dict)
-            self.conv3_2 = conv_layer(self.conv3_1, "conv3_2", [3, 3, 256, 256], self.is_training_pl, self.use_vgg,
-                                      self.vgg_param_dict)
-            self.conv3_3 = conv_layer(self.conv3_2, "conv3_3", [3, 3, 256, 256], self.is_training_pl, self.use_vgg,
-                                      self.vgg_param_dict)
+            self.conv3_1 = conv_layer(self.pool2, "conv3_1", [3, 3, 128, 256], self.is_training_pl, self.use_vgg, self.vgg_param_dict)
+            self.conv3_2 = conv_layer(self.conv3_1, "conv3_2", [3, 3, 256, 256], self.is_training_pl, self.use_vgg, self.vgg_param_dict)
+            self.conv3_3 = conv_layer(self.conv3_2, "conv3_3", [3, 3, 256, 256], self.is_training_pl, self.use_vgg, self.vgg_param_dict)
             self.pool3, self.pool3_index, self.shape_3 = max_pool(self.conv3_3, 'pool3')
 
             # Fourth box of convolution layer(10)
             if self.bayes:
-                self.dropout1 = tf.layers.dropout(self.pool3, rate=(1 - self.keep_prob_pl),
-                                                  training=self.with_dropout_pl, name="dropout1")
-                self.conv4_1 = conv_layer(self.dropout1, "conv4_1", [3, 3, 256, 512], self.is_training_pl, self.use_vgg,
-                                          self.vgg_param_dict)
+                self.dropout1 = tf.layers.dropout(self.pool3, rate=(1 - self.keep_prob_pl), training=self.with_dropout_pl, name="dropout1")
+                self.conv4_1 = conv_layer(self.dropout1, "conv4_1", [3, 3, 256, 512], self.is_training_pl, self.use_vgg, self.vgg_param_dict)
             else:
-                self.conv4_1 = conv_layer(self.pool3, "conv4_1", [3, 3, 256, 512], self.is_training_pl, self.use_vgg,
-                                          self.vgg_param_dict)
-            self.conv4_2 = conv_layer(self.conv4_1, "conv4_2", [3, 3, 512, 512], self.is_training_pl, self.use_vgg,
-                                      self.vgg_param_dict)
-            self.conv4_3 = conv_layer(self.conv4_2, "conv4_3", [3, 3, 512, 512], self.is_training_pl, self.use_vgg,
-                                      self.vgg_param_dict)
+                self.conv4_1 = conv_layer(self.pool3, "conv4_1", [3, 3, 256, 512], self.is_training_pl, self.use_vgg, self.vgg_param_dict)
+            self.conv4_2 = conv_layer(self.conv4_1, "conv4_2", [3, 3, 512, 512], self.is_training_pl, self.use_vgg, self.vgg_param_dict)
+            self.conv4_3 = conv_layer(self.conv4_2, "conv4_3", [3, 3, 512, 512], self.is_training_pl, self.use_vgg, self.vgg_param_dict)
             self.pool4, self.pool4_index, self.shape_4 = max_pool(self.conv4_3, 'pool4')
 
             # Fifth box of convolution layers(13)
             if self.bayes:
                 self.dropout2 = tf.layers.dropout(self.pool4, rate=(1 - self.keep_prob_pl),
                                                   training=self.with_dropout_pl, name="dropout2")
-                self.conv5_1 = conv_layer(self.dropout2, "conv5_1", [3, 3, 512, 512], self.is_training_pl, self.use_vgg,
-                                          self.vgg_param_dict)
+                self.conv5_1 = conv_layer(self.dropout2, "conv5_1", [3, 3, 512, 512], self.is_training_pl, self.use_vgg, self.vgg_param_dict)
             else:
-                self.conv5_1 = conv_layer(self.pool4, "conv5_1", [3, 3, 512, 512], self.is_training_pl, self.use_vgg,
-                                          self.vgg_param_dict)
-            self.conv5_2 = conv_layer(self.conv5_1, "conv5_2", [3, 3, 512, 512], self.is_training_pl, self.use_vgg,
-                                      self.vgg_param_dict)
-            self.conv5_3 = conv_layer(self.conv5_2, "conv5_3", [3, 3, 512, 512], self.is_training_pl, self.use_vgg,
-                                      self.vgg_param_dict)
+                self.conv5_1 = conv_layer(self.pool4, "conv5_1", [3, 3, 512, 512], self.is_training_pl, self.use_vgg, self.vgg_param_dict)
+            self.conv5_2 = conv_layer(self.conv5_1, "conv5_2", [3, 3, 512, 512], self.is_training_pl, self.use_vgg, self.vgg_param_dict)
+            self.conv5_3 = conv_layer(self.conv5_2, "conv5_3", [3, 3, 512, 512], self.is_training_pl, self.use_vgg, self.vgg_param_dict)
             self.pool5, self.pool5_index, self.shape_5 = max_pool(self.conv5_3, 'pool5')
 
             # ---------------------So Now the encoder process has been Finished--------------------------------------#
@@ -123,60 +106,46 @@ class SegNet:
 
             # First box of deconvolution layers(3)
             if self.bayes:
-                self.dropout3 = tf.layers.dropout(self.pool5, rate=(1 - self.keep_prob_pl),
-                                                  training=self.with_dropout_pl, name="dropout3")
-                self.deconv5_1 = up_sampling(self.dropout3, self.pool5_index, self.shape_5, self.batch_size_pl,
-                                             name="unpool_5")
+                self.dropout3 = tf.layers.dropout(self.pool5, rate=(1 - self.keep_prob_pl), training=self.with_dropout_pl, name="dropout3")
+                self.deconv5_1 = up_sampling(self.dropout3, self.pool5_index, self.shape_5, self.batch_size_pl, name="unpool_5")
             else:
-                self.deconv5_1 = up_sampling(self.pool5, self.pool5_index, self.shape_5, self.batch_size_pl,
-                                             name="unpool_5")
+                self.deconv5_1 = up_sampling(self.pool5, self.pool5_index, self.shape_5, self.batch_size_pl, name="unpool_5")
             self.deconv5_2 = conv_layer(self.deconv5_1, "deconv5_2", [3, 3, 512, 512], self.is_training_pl)
             self.deconv5_3 = conv_layer(self.deconv5_2, "deconv5_3", [3, 3, 512, 512], self.is_training_pl)
             self.deconv5_4 = conv_layer(self.deconv5_3, "deconv5_4", [3, 3, 512, 512], self.is_training_pl)
             # Second box of deconvolution layers(6)
             if self.bayes:
-                self.dropout4 = tf.layers.dropout(self.deconv5_4, rate=(1 - self.keep_prob_pl),
-                                                  training=self.with_dropout_pl, name="dropout4")
-                self.deconv4_1 = up_sampling(self.dropout4, self.pool4_index, self.shape_4, self.batch_size_pl,
-                                             name="unpool_4")
+                self.dropout4 = tf.layers.dropout(self.deconv5_4, rate=(1 - self.keep_prob_pl), training=self.with_dropout_pl, name="dropout4")
+                self.deconv4_1 = up_sampling(self.dropout4, self.pool4_index, self.shape_4, self.batch_size_pl, name="unpool_4")
             else:
-                self.deconv4_1 = up_sampling(self.deconv5_4, self.pool4_index, self.shape_4, self.batch_size_pl,
-                                             name="unpool_4")
+                self.deconv4_1 = up_sampling(self.deconv5_4, self.pool4_index, self.shape_4, self.batch_size_pl, name="unpool_4")
             self.deconv4_2 = conv_layer(self.deconv4_1, "deconv4_2", [3, 3, 512, 512], self.is_training_pl)
             self.deconv4_3 = conv_layer(self.deconv4_2, "deconv4_3", [3, 3, 512, 512], self.is_training_pl)
             self.deconv4_4 = conv_layer(self.deconv4_3, "deconv4_4", [3, 3, 512, 256], self.is_training_pl)
             # Third box of deconvolution layers(9)
             if self.bayes:
-                self.dropout5 = tf.layers.dropout(self.deconv4_4, rate=(1 - self.keep_prob_pl),
-                                                  training=self.with_dropout_pl, name="dropout5")
-                self.deconv3_1 = up_sampling(self.dropout5, self.pool3_index, self.shape_3, self.batch_size_pl,
-                                             name="unpool_3")
+                self.dropout5 = tf.layers.dropout(self.deconv4_4, rate=(1 - self.keep_prob_pl), training=self.with_dropout_pl, name="dropout5")
+                self.deconv3_1 = up_sampling(self.dropout5, self.pool3_index, self.shape_3, self.batch_size_pl, name="unpool_3")
             else:
-                self.deconv3_1 = up_sampling(self.deconv4_4, self.pool3_index, self.shape_3, self.batch_size_pl,
-                                             name="unpool_3")
+                self.deconv3_1 = up_sampling(self.deconv4_4, self.pool3_index, self.shape_3, self.batch_size_pl, name="unpool_3")
             self.deconv3_2 = conv_layer(self.deconv3_1, "deconv3_2", [3, 3, 256, 256], self.is_training_pl)
             self.deconv3_3 = conv_layer(self.deconv3_2, "deconv3_3", [3, 3, 256, 256], self.is_training_pl)
             self.deconv3_4 = conv_layer(self.deconv3_3, "deconv3_4", [3, 3, 256, 128], self.is_training_pl)
             # Fourth box of deconvolution layers(11)
             if self.bayes:
-                self.dropout6 = tf.layers.dropout(self.deconv3_4, rate=(1 - self.keep_prob_pl),
-                                                  training=self.with_dropout_pl, name="dropout6")
-                self.deconv2_1 = up_sampling(self.dropout6, self.pool2_index, self.shape_2, self.batch_size_pl,
-                                             name="unpool_2")
+                self.dropout6 = tf.layers.dropout(self.deconv3_4, rate=(1 - self.keep_prob_pl), training=self.with_dropout_pl, name="dropout6")
+                self.deconv2_1 = up_sampling(self.dropout6, self.pool2_index, self.shape_2, self.batch_size_pl, name="unpool_2")
             else:
-                self.deconv2_1 = up_sampling(self.deconv3_4, self.pool2_index, self.shape_2, self.batch_size_pl,
-                                             name="unpool_2")
+                self.deconv2_1 = up_sampling(self.deconv3_4, self.pool2_index, self.shape_2, self.batch_size_pl, name="unpool_2")
             self.deconv2_2 = conv_layer(self.deconv2_1, "deconv2_2", [3, 3, 128, 128], self.is_training_pl)
             self.deconv2_3 = conv_layer(self.deconv2_2, "deconv2_3", [3, 3, 128, 64], self.is_training_pl)
             # Fifth box of deconvolution layers(13)
-            self.deconv1_1 = up_sampling(self.deconv2_3, self.pool1_index, self.shape_1, self.batch_size_pl,
-                                         name="unpool_1")
+            self.deconv1_1 = up_sampling(self.deconv2_3, self.pool1_index, self.shape_1, self.batch_size_pl, name="unpool_1")
             self.deconv1_2 = conv_layer(self.deconv1_1, "deconv1_2", [3, 3, 64, 64], self.is_training_pl)
             self.deconv1_3 = conv_layer(self.deconv1_2, "deconv1_3", [3, 3, 64, 64], self.is_training_pl)
 
             with tf.variable_scope('conv_classifier') as scope:
-                self.kernel = variable_with_weight_decay('weights', initializer=initialization(1, 64),
-                                                         shape=[1, 1, 64, self.num_classes], wd=False)
+                self.kernel = variable_with_weight_decay('weights', initializer=initialization(1, 64), shape=[1, 1, 64, self.num_classes], wd=False)
                 self.conv = tf.nn.conv2d(self.deconv1_3, self.kernel, [1, 1, 1, 1], padding='SAME')
                 self.biases = variable_with_weight_decay('biases', tf.constant_initializer(0.0),
                                                          shape=[self.num_classes], wd=False)
@@ -236,8 +205,7 @@ class SegNet:
                                                                  feed_dict=feed_dict)
                     self.train_loss.append(_loss)
                     self.train_accuracy.append(_accuracy)
-                    print("Iteration {}: Train Loss{:6.3f}, Train Accu {:6.3f}".format(step, self.train_loss[-1],
-                                                                                       self.train_accuracy[-1]))
+                    print("Iteration {}: Train Loss{:6.3f}, Train Accu {:6.3f}".format(step, self.train_loss[-1], self.train_accuracy[-1]))
 
                     if step % 100 == 0:
                         conv_classifier = self.sess.run(self.logits, feed_dict=feed_dict)
