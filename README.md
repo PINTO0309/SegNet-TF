@@ -1,7 +1,6 @@
 # SegNet-Tensorflow implementation
 [October 09, 2018]  
-I made minor bugfixes for toimcio/SegNet-tensorflow.  
-The copyright of the product belongs to toimcio.  
+I made minor bugfixes for toimcio/SegNet-tensorflow.   
 https://github.com/toimcio/SegNet-tensorflow
 
 # Usage
