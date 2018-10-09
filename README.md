@@ -4,6 +4,7 @@ I made minor bugfixes for toimcio/SegNet-tensorflow.
 https://github.com/toimcio/SegNet-tensorflow
 
 # Usage
+## 1. Training
 ```
 $ cd ~
 $ git clone https://github.com/PINTO0309/SegNet-TF.git
@@ -32,6 +33,20 @@ $ cd ..
 $ python3
 >> from SegNet import SegNet
 >> SegNet().train()
+```
+## 2. Slimming weight files for deployment
+A weight file after slimming is generated under the "ckpt" folder.
+```
+$ python3 SegNetInfer.py
+```
+## 3. Freeze graph
+```
+$ python3 freeze_graph.py \
+--input_graph=model/deployfinal.pbtxt \
+--input_checkpoint=model/deployfinal.ckpt \
+--output_graph=model/deployfinal.pb \
+--output_node_names=conv_classifier/output \
+--input_binary=False
 ```
 
 # Environment
