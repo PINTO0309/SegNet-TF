@@ -42,9 +42,9 @@ $ python3 SegNetInfer.py
 ## 3. Freeze graph
 ```
 $ python3 freeze_graph.py \
---input_graph=model/deployfinal.pbtxt \
---input_checkpoint=model/deployfinal.ckpt \
---output_graph=model/deployfinal.pb \
+--input_graph=ckpt/deployfinal.pbtxt \
+--input_checkpoint=ckpt/deployfinal.ckpt \
+--output_graph=ckpt/deployfinal.pb \
 --output_node_names=conv_classifier/output \
 --input_binary=False
 ```
