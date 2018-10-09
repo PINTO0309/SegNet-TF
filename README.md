@@ -2,7 +2,11 @@
 [October 09, 2018]  
 I made minor bugfixes for toimcio/SegNet-tensorflow.   
 https://github.com/toimcio/SegNet-tensorflow
-
+![overall_accuracy](https://github.com/PINTO0309/SegNet-TF/blob/master/result/overall_accuracy.png)
+<br><br>
+![class_accuracy](https://github.com/PINTO0309/SegNet-TF/blob/master/result/class_accuracy.png)
+<br><br>
+![results_img](https://github.com/PINTO0309/SegNet-TF/blob/master/result/results_img.png)
 # Usage
 ## 1. Training
 ```
