@@ -54,7 +54,7 @@ $ python3
 >> from SegNet import SegNet
 >> SegNet().visual_results()
 ```
-
+![inferencetest](https://github.com/PINTO0309/SegNet-TF/blob/master/result/Inference_Test.png)
 # Environment
 Requirement: Tensorflow-GPU 1.11.0  
 Ubuntu: 16.04  
