@@ -48,6 +48,12 @@ $ python3 freeze_graph.py \
 --output_node_names=conv_classifier/output \
 --input_binary=False
 ```
+## 4. Inference Test
+```
+$ python3
+>> from SegNet import SegNet
+>> SegNet().visual_results()
+```
 
 # Environment
 Requirement: Tensorflow-GPU 1.11.0  
