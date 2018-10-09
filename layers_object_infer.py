@@ -62,7 +62,7 @@ def conv_layer(bottom, name, shape, is_training, use_vgg=False, vgg_param_dict=N
 
 def batch_norm(bias_input, is_training, scope):
     with tf.variable_scope(scope.name) as scope:
-        return tf.cond(is_training,
+        return tf.cond(tf.constant(is_training, dtype=tf.bool),
                        lambda: tf.contrib.layers.batch_norm(bias_input, is_training=True, center=False, scope=scope),
                        lambda: tf.contrib.layers.batch_norm(bias_input, is_training=False, center=False, reuse=True, scope=scope))
 #is_training = True, it will accumulate the statistics of the movements into moving_mean and moving_variance. When it's

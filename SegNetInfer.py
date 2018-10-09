@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-from layers_object import conv_layer, up_sampling, max_pool, initialization, variable_with_weight_decay
+from layers_object_infer import conv_layer, up_sampling, max_pool, initialization, variable_with_weight_decay
 
 class SegNet:
     def __init__(self):
